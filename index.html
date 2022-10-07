@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <title>Assignment 3(Yusuf)</title>
+
+    <style>
+      
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success px-2 mb-5">
+      <a class="navbar-brand" href="#">Assignment 3</a>
+    </nav>
+    <!-- End Navbar -->
+
+    <div class="container">
+      <div class="row mb-3">
+        <div class="col-sm-4 offset-md-4">
+          <div class="card w-150">
+            <div class="card-body bg-primary">
+              <h5 class="card-title text-center" style="font-family:times new roman;"><b>COVID-19 TRACKER</b></h5>
+              <ul
+                style="
+                  list-style-type: circle;
+                  list-style: none;
+                  padding-left: 0;
+                "
+              >
+                <li class="negara"></li>
+                <li class="benua"></li>
+                <li class="tanggal"></li>
+              </ul>
+              <div class="form-group py-2">
+                <div class="input-group mb-3">
+                <input
+                  type="text"
+                  name="country"
+                  placeholder="Cari Berdasarkan Negara..."
+                  class="form-control text-center"
+                  id=""
+                  style="border-radius: 20px 0px 0px 20px"
+                  
+                />
+                <button class="btn btn-success btn_get" style="border-radius: 0px 20px 20px 0px">Get Data</button>
+              </div>
+            </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards" style="padding:20px; background:rgb(231, 165, 66); border-radius: 10px;">
+        <!-- Cases -->
+        <div class="row mb-3">
+          <div class="col-sm-4">
+            <div class="card w-100 bg-primary text-white">
+              <img
+                width="150"
+                class="mx-auto"
+                src="mask.png"
+                alt="Card image cap"
+              />
+              <div class="card-body text-center">
+                <h4 class="card-title">Active Cases</h4>
+                <p class="card-text active_cases">15000009</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card w-100 bg-primary text-white">
+              <img
+                width="150"
+                class="mx-auto"
+                src="mask.png"
+                alt="Card image cap"
+              />
+              <div class="card-body text-center">
+                <h4 class="card-title">New Cases</h4>
+                <p class="card-text new_cases">15000009</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card w-100 bg-primary text-white">
+              <img
+                width="150"
+                class="mx-auto"
+                src="mask.png"
+                alt="Card image cap"
+              />
+              <div class="card-body text-center">
+                <h4 class="card-title">Recovered Cases</h4>
+                <p class="card-text recovered_cases">15000009</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deaths -->
+        <div class="row mb-3">
+          <div class="col-sm-4">
+            <div class="card w-100 bg-primary text-white">
+              <img
+                width="150"
+                class="mx-auto"
+                src="covid.png"
+                alt="Card image cap"
+              />
+              <div class="card-body text-center">
+                <h4 class="card-title">Total Cases</h4>
+                <p class="card-text total_cases">15000009</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card w-100 bg-danger text-white">
+              <img
+                width="150"
+                class="mx-auto"
+                src="virus.png"
+                alt="Card image cap"
+              />
+              <div class="card-body text-center">
+                <h4 class="card-title">Total Deaths</h4>
+                <p class="card-text total_deaths">15000009</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card w-100 bg-warning text-white">
+              <img
+                width="150"
+                class="mx-auto"
+                src="pcr-test.png"
+                alt="Card image cap"
+              />
+              <div class="card-body text-center">
+                <h4 class="card-title">Total Tests</h4>
+                <p class="card-text total_tests">15000009</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <b>
+        &copy;Yusuf Agung Habibi(2022)
+      </b>
+      </div>
+    </div>
+    
+      <!-- End Container -->
+    </div>
+
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        const $body = $('body');
+        const today = new Date().toLocaleDateString('id-ID');
+        $('.tanggal').text(' Tanggal  : ' + today);
+
+        $('.cards').hide();
+
+        $('.btn_get').on('click', function () {
+          const country = $('input[name=country]').val();
+          if (!country) {
+            alert('Isi Pencarian Negara!');
+            return false;
+          }
+
+          $body.addClass('loading');
+          getDataFromApi(country);
+        });
+
+        async function getDataFromApi(country) {
+          const options = {
+            method: 'GET',
+            headers: {
+              'X-RapidAPI-Key':
+                '3658ea4f4amsh54b6ab153d06cadp1bb519jsn47c70c3c6518',
+              'X-RapidAPI-Host': 'covid-193.p.rapidapi.com',
+            },
+          };
+          const data = await fetch(
+            'https://covid-193.p.rapidapi.com/statistics?country=' + country,
+            options
+          );
+
+          const response = await data.json();
+          await $body.removeClass('loading');
+          await setData(response);
+        }
+
+        function setData(data) {
+          if (data.results > 0) {
+            const information = data.response[0];
+            $('.negara').text('Negara : ' + information.country);
+            $('.benua').text('Benua : ' + information.continent);
+            $('.total_cases').text(information.cases.total);
+            $('.new_cases').text(information.cases.new);
+            $('.active_cases').text(information.cases.active);
+            $('.recovered_cases').text(information.cases.recovered);
+            $('.total_deaths').text(information.deaths.total);
+            $('.new_deaths').text(information.deaths.new);
+            $('.total_tests').text(information.tests.total);
+
+            $('.cards').show();
+          } else {
+            $('.cards').hide();
+            alert('Data Tidak Ditemukan');
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
